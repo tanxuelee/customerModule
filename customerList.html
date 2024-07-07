@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer List</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .table-container {
+            width: 80%;
+            margin: auto;
+        }
+
+        .table-scrollable {
+            max-height: 450px;
+            overflow-y: auto;
+            display: block;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 1;
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex justify-content-center">
+        <h1><br>Customer List</h1>
+    </div>
+
+    <div class="form-inline d-flex justify-content-center mb-3">
+        <select id="searchType" class="form-control mr-2">
+            <option value="name">Name</option>
+            <option value="ic">IC Number</option>
+        </select>
+        <input type="text" id="searchInput" class="form-control mr-2" placeholder="Search...">
+        <button id="searchBtn" class="btn btn-primary mr-2">Search</button>
+        <button id="resetBtn" class="btn btn-secondary">Reset</button>
+    </div>
+
+    <div class="table-container">
+        <div class="table-scrollable">
+            <table class="table table-bordered border-dark align-middle mx-auto">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>IC Number</th>
+                        <th>Date of Birth</th>
+                        <th>Address</th>
+                        <th>Address Country</th>
+                        <th>Address Postcode</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="customerList">
+                    <!-- Customer rows will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center mt-4">
+            <a href="customerAdd.html" class="btn btn-success">Add Customer</a>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+
+        function loadCustomers(customers) {
+            let customerRows = '';
+            customers.forEach(customer => {
+                const formattedDate = formatDate(customer.date_of_birth);
+                customerRows += `
+                    <tr>
+                        <td>${customer.name}</td>
+                        <td>${customer.ic_number}</td>
+                        <td>${formattedDate}</td>
+                        <td>${customer.address}</td>
+                        <td>${customer.address_country}</td>
+                        <td>${customer.address_postcode}</td>
+                        <td style="text-align: center;"><a href="customerEdit.html?id=${customer.id}" class="btn btn-primary">Edit</a></td>
+                    </tr>
+                `;
+            });
+            $('#customerList').html(customerRows);
+        }
+
+        $(document).ready(function () {
+            let originalCustomers = [];
+
+            function fetchCustomers() {
+                $.ajax({
+                    url: 'http://localhost:3000/listCustomers',
+                    method: 'GET',
+                    success: function (customers) {
+                        originalCustomers = customers;
+                        loadCustomers(customers);
+                    },
+                    error: function (err) {
+                        console.error(err);
+                        alert('Load customer list failed');
+                    }
+                });
+            }
+
+            $('#searchBtn').click(function () {
+                const searchType = $('#searchType').val();
+                const searchInput = $('#searchInput').val().toLowerCase();
+                const filteredCustomers = originalCustomers.filter(customer => {
+                    if (searchType === 'name') {
+                        return customer.name.toLowerCase().includes(searchInput);
+                    } else {
+                        return customer.ic_number.toLowerCase().includes(searchInput);
+                    }
+                });
+                loadCustomers(filteredCustomers);
+            });
+
+            $('#resetBtn').click(function () {
+                $('#searchType').val('name');
+                $('#searchInput').val('');
+                loadCustomers(originalCustomers);
+            });
+
+            fetchCustomers();
+        });
+    </script>
+</body>
+
+</html>
