@@ -12,9 +12,9 @@ Create a mini project for customer module. This module has included add customer
 - Item 7: Create 30 customer records (Insert Query)
 
 You need to create this 5 files and only submit this 5 file for this task.
-Frontend File: customerList.html, customerAdd.html, customerEdit.html
-Backend File: customer.js (put all API in this file)
-Database File: customerDatabase.sql
+- Frontend File: customerList.html, customerAdd.html, customerEdit.html
+- Backend File: customer.js (put all API in this file)
+- Database File: customerDatabase.sql
 
 You can apply
 - Frontend: HTML/Bootstrap/Jquery/Javascipt
