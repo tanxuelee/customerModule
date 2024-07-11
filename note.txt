@@ -1,0 +1,23 @@
+initialize note.js project:
+mkdir customerModule
+cd customerModule
+npm init -y
+
+install dependencies:
+npm install express mysql body-parser
+
+start server:
+node customer.js
+-------------------------------------------------
+
+res.send -> sending a response
+res.json -> sen a JSON response
+
+// Create ic as index reason:
+- retrieve data from the database more quickly, used to speed up searches/queries (speed up query performance)
+
+// DELIMITER
+- used to change the statement delimiter from ; to // while the procedure is being defined. This enables the ; delimiter used in the procedure body to be passed through to the server rather than being interpreted by mysql itself.
+
+// CREATE PROCEDURE
+- 

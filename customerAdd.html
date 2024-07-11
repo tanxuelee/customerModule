@@ -81,11 +81,11 @@
             $.ajax({
                 url: 'http://localhost:3000/addCustomer',
                 method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(customer),
+                contentType: 'application/json', // data is sent as JSON format
+                data: JSON.stringify(customer), // convert javascript object to JSON string
                 success: function (response) {
                     alert('Customer added successfully');
-                    window.removeEventListener('beforeunload', handleBeforeUnload);
+                    window.removeEventListener('beforeunload', handleBeforeUnload); // direct update the window location without handleBeforeUnload
                     window.location.href = 'customerList.html';
                 },
                 error: function (err) {
